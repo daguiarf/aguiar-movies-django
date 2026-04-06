@@ -25,4 +25,7 @@ urlpatterns = [
 
     # Fórum
     path("api/forum/", include("forum.urls")),
+
+    # Notificações
+    path("api/", include("notifications.urls")),
 ]

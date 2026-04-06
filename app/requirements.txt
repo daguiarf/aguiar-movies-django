@@ -6,3 +6,5 @@ djangorestframework-simplejwt
 requests
 drf-spectacular>=0.27.0
 django-cors-headers
+celery[redis]>=5.3
+redis>=5.0

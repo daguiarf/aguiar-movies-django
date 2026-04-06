@@ -19,6 +19,18 @@ services:
       retries: 10
       start_period: 10s
 
+  redis:
+    image: redis:7-alpine
+    container_name: aguiar_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   web:
     build: .
     container_name: aguiar_web
@@ -29,6 +41,22 @@ services:
       - "8000:8000"
     depends_on:
       db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  worker:
+    build: .
+    container_name: aguiar_worker
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - ./app:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     env_file:
       - .env

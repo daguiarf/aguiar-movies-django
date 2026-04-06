@@ -61,6 +61,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return qs
 
+    def get_permissions(self):
+        if self.action in ("like", "create_comment"):
+            return [permissions.IsAuthenticated()]
+        return super().get_permissions()
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
